@@ -9,7 +9,7 @@ on:
         description: 'Version name for the build'
       version_code:
         required: false
-        type: number
+        type: string
         description: 'Version code for the build (default is in version.properties)'
       build_type:
         required: true

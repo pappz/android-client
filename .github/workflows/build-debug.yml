@@ -26,7 +26,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       version_name: ${{ needs.get-version.outputs.version_name }}
-      version_code: ${{ github.run_number + 0 }}
+      version_code: ${{ github.run_number }}
       build_type: debug
 
   archive-artifacts:
