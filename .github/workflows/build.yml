@@ -7,6 +7,10 @@ on:
         required: true
         type: string
         description: 'Version name for the build'
+      version_code:
+        required: false
+        type: number
+        description: 'Version code for the build (default is in version.properties)'
       build_type:
         required: true
         type: string
@@ -69,13 +73,25 @@ jobs:
       - name: Build APK and Bundle
         run: |
           BUILD_TYPE=${{ inputs.build_type == 'release' && 'Release' || 'Debug' }}
-          ./gradlew --no-daemon assemble${BUILD_TYPE} bundle${BUILD_TYPE} -PversionName="${VERSION_NAME}"
+           VERSION_CODE_ARG=""
+          
+          if [ -n "${{ inputs.version_code }}" ]; then
+            VERSION_CODE_ARG="-PversionCode=${{ inputs.version_code }}"
+          fi
+      
+          ./gradlew --no-daemon assemble${BUILD_TYPE} bundle${BUILD_TYPE} -PversionName="${{ inputs.version_name }}" $VERSION_CODE_ARG        
 
       - name: Rename artifacts
         run: |
-          BUILD_TYPE=${{ inputs.build_type }}
-          mv app/build/outputs/apk/${BUILD_TYPE}/app-${BUILD_TYPE}.apk app/build/outputs/apk/${BUILD_TYPE}/netbird-${{ inputs.version_name }}.apk
-          mv app/build/outputs/bundle/${BUILD_TYPE}/app-${BUILD_TYPE}.aab app/build/outputs/bundle/${BUILD_TYPE}/netbird-${{ inputs.version_name }}.aab
+          # Determine Gradle build type folder
+          if [[ "${{ inputs.build_type }}" == "release" ]]; then
+          BUILD_TYPE_FOLDER="release"
+          else
+          BUILD_TYPE_FOLDER="debug"
+          fi
+          
+          mv app/build/outputs/apk/${BUILD_TYPE_FOLDER}/app-${BUILD_TYPE_FOLDER}.apk app/build/outputs/apk/${BUILD_TYPE_FOLDER}/netbird-${{ inputs.version_name }}.apk
+          mv app/build/outputs/bundle/${BUILD_TYPE_FOLDER}/app-${BUILD_TYPE_FOLDER}.aab app/build/outputs/bundle/${BUILD_TYPE_FOLDER}/netbird-${{ inputs.version_name }}.aab
 
       - name: Set build info
         id: build-info

@@ -26,6 +26,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       version_name: ${{ needs.get-version.outputs.version_name }}
+      version_code: ${{ github.run_number }}
       build_type: debug
 
   upload-debug:
@@ -35,6 +36,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Check debug artifacts exist
+        run: |
+          if [ ! -f "${{ needs.build-debug.outputs.apk_path }}" ] && [ ! -f "${{ needs.build-debug.outputs.bundle_path }}" ]; then
+            echo "Error: No artifacts found!"
+            exit 1
+          fi
+
       - name: Upload debug artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -42,4 +50,4 @@ jobs:
           path: |
             ${{ needs.build-debug.outputs.apk_path }}
             ${{ needs.build-debug.outputs.bundle_path }}
-          retention-days: 1
+          retention-days: 3
