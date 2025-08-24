@@ -100,3 +100,13 @@ jobs:
           BUILD_TYPE=${{ inputs.build_type }}
           echo "apk_path=app/build/outputs/apk/${BUILD_TYPE}/netbird-${{ inputs.version_name }}.apk" >> $GITHUB_OUTPUT
           echo "bundle_path=app/build/outputs/bundle/${BUILD_TYPE}/netbird-${{ inputs.version_name }}.aab" >> $GITHUB_OUTPUT
+
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-artifacts
+          path: |
+            app/build/outputs/apk/${{ inputs.build_type }}/netbird-${{ inputs.version_name }}.apk
+            app/build/outputs/bundle/${{ inputs.build_type }}/netbird-${{ inputs.version_name }}.aab
+          retention-days: 3
