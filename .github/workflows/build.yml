@@ -83,6 +83,7 @@ jobs:
 
       - name: Rename artifacts
         run: |
+          set -e
           # Determine Gradle build type folder
           if [[ "${{ inputs.build_type }}" == "release" ]]; then
           BUILD_TYPE_FOLDER="release"
