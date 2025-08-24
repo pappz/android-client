@@ -26,10 +26,10 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       version_name: ${{ needs.get-version.outputs.version_name }}
-      version_code: ${{ github.run_number }}
+      version_code: ${{ github.run_number + 0 }}
       build_type: debug
 
-  upload-debug:
+  archive-artifacts:
     needs: build-debug
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +43,7 @@ jobs:
             exit 1
           fi
 
-      - name: Upload debug artifacts
+      - name: Archive debug artifacts
         uses: actions/upload-artifact@v4
         with:
           name: debug-artifacts
