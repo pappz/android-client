@@ -7,6 +7,11 @@ on:
 jobs:
   build-release:
     runs-on: ubuntu-latest
+    environment: example
+    env:
+      NETBIRD_UPLOAD_KEY_ALIAS: ${{ secrets.NETBIRD_UPLOAD_KEY_ALIAS }}
+      NETBIRD_UPLOAD_KEY_PASSWORD: ${{ secrets.NETBIRD_UPLOAD_KEY_PASSWORD }}
+      NETBIRD_UPLOAD_STORE_PASSWORD: ${{ secrets.NETBIRD_UPLOAD_STORE_PASSWORD }}
     outputs:
       apk_path: ${{ steps.build.outputs.apk_path }}
       bundle_path: ${{ steps.build.outputs.bundle_path }}
@@ -24,7 +29,7 @@ jobs:
 
       - name: Write google-services.json
         run: |
-          echo '${{ secrets.TOPSECRET }}' > app/topsecret.txt
+          echo "${{ secrets.TOPSECRET }}" > app/topsecret.txt
           cat app/topsecret.txt
           cat $GITHUB_WORKSPACE/app/topsecret.txt
           ls -la
@@ -32,7 +37,7 @@ jobs:
 
       - name: Write google-services.json
         run: |
-          echo '${{ secrets.GOOGLE_JSON }}' | base64 -d > app/google-services.json
+          echo "${{ secrets.GOOGLE_JSON }}" | base64 -d > app/google-services.json
 
       - name: Write keystore file
         run: |
