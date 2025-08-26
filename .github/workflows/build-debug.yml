@@ -29,7 +29,6 @@ jobs:
         uses: ./.github/actions/build-android
         with:
           version_name: ${{ steps.version.outputs.version_name }}
-          version_code: ${{ github.run_number }}
           build_type: debug
 
       - name: Upload build artifacts
