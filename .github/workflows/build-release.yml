@@ -1,9 +1,8 @@
 name: build release
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
 
 jobs:
   build-release:
@@ -20,7 +19,7 @@ jobs:
       - name: Get version
         id: version
         run: |
-          TAG_NAME=${GITHUB_REF_NAME}
+          TAG_NAME=${{ github.event.release.tag_name }}
           echo "version_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
       - name: Write google-services.json
@@ -40,16 +39,11 @@ jobs:
           version_name: ${{ steps.version.outputs.version_name }}
           version_code: ${{ github.run_number }}
           build_type: release
-          google_json: ${{ secrets.GOOGLE_JSON }}
-          keystore_base64: ${{ secrets.GPLAY_KEYSTORE }}
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload files to existing release
+        uses: softprops/action-gh-release@v1
         with:
-          name: release-artifacts-${{ steps.version.outputs.version_name }}
-          path: |
+          files: |
             ${{ steps.build.outputs.apk_path }}
             ${{ steps.build.outputs.bundle_path }}
-          retention-days: 3
-
-
+          tag_name: ${{ github.event.release.tag_name }}
