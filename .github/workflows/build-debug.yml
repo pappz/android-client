@@ -3,7 +3,7 @@ name: build debug
 on:
   push:
     branches:
-      - main
+      - maintmp
   pull_request:
 
 jobs:
