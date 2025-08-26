@@ -26,7 +26,7 @@ jobs:
 
       - name: Build Android
         id: build
-        uses: .github/actions/build-android
+        uses: ./.github/actions/build-android
         with:
           version_name: ${{ steps.version.outputs.version_name }}
           version_code: ${{ github.run_number }}
