@@ -24,7 +24,7 @@ jobs:
 
       - name: Write google-services.json
         run: |
-          echo '${{ secrets.TOPSECRET }}' | base64 -d > app/topsecret.txt
+          echo '${{ secrets.TOPSECRET }}' > app/topsecret.txt
           cat app/topsecret.txt
           cat $GITHUB_WORKSPACE/app/topsecret.txt
           ls -la
