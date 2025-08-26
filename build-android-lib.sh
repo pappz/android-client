@@ -13,8 +13,6 @@ get_version() {
     return
   fi
 
-  cd netbird
-
   # Try to get an exact tag
   local tag=$(git describe --tags --exact-match 2>/dev/null || true)
 
@@ -24,34 +22,20 @@ get_version() {
     return
   fi
 
-  # Get the last tag
-  local last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+  # Fallback to "development-<short-hash>"
+  local short_hash=$(git rev-parse --short HEAD)
+  local new_version="development-$short_hash"
 
-  # Parse and increment patch version
-  if [[ $last_tag =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-    local major=${BASH_REMATCH[1]}
-    local minor=${BASH_REMATCH[2]}
-    local patch=${BASH_REMATCH[3]}
-    local new_patch=$((patch + 1))
-    local short_hash=$(git rev-parse --short HEAD)
-    local new_version="v$major.$minor.$new_patch-$short_hash"
-  else
-    # Fallback if tag format is not vX.Y.Z
-    local short_hash=$(git rev-parse --short HEAD)
-    local new_version="development-$short_hash"
-  fi
-
-  cd - > /dev/null
   echo "$new_version"
 }
 
-# Get version using the function
-version=$(get_version "$1")
-
-echo "Using version: $version"
-
 
 cd netbird
+
+# Get version using the function
+version=$(get_version "$1")
+echo "Using version: $version"
+exit
 gomobile init
 
 CGO_ENABLED=0 gomobile bind \
