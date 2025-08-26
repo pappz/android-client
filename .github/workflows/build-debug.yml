@@ -7,13 +7,16 @@ on:
   pull_request:
 
 jobs:
-  get-version:
+  build-debug:
     runs-on: ubuntu-latest
     outputs:
-      version_name: ${{ steps.version.outputs.version_name }}
+      apk_path: ${{ steps.build.outputs.apk_path }}
+      bundle_path: ${{ steps.build.outputs.bundle_path }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Get short Git hash
         id: version
@@ -21,9 +24,19 @@ jobs:
           SHORT_GIT_SHA=$(git rev-parse --short HEAD)
           echo "version_name=ci-${SHORT_GIT_SHA}" >> $GITHUB_OUTPUT
 
-  build-debug:
-    needs: get-version
-    uses: ./.github/workflows/build.yml
-    with:
-      version_name: ${{ needs.get-version.outputs.version_name }}
-      build_type: debug
+      - name: Build Android
+        id: build
+        uses: ./.github/actions/build-android
+        with:
+          version_name: ${{ steps.version.outputs.version_name }}
+          version_code: ${{ github.run_number }}
+          build_type: debug
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-artifacts-${{ steps.version.outputs.version_name }}
+          path: |
+            ${{ steps.build.outputs.apk_path }}
+            ${{ steps.build.outputs.bundle_path }}
+          retention-days: 3
