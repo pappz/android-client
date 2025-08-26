@@ -22,9 +22,9 @@ get_version() {
     return
   fi
 
-  # Fallback to "development-<short-hash>"
+  # Fallback to "dev-<short-hash>"
   local short_hash=$(git rev-parse --short HEAD)
-  local new_version="development-$short_hash"
+  local new_version="dev-$short_hash"
 
   echo "$new_version"
 }
@@ -35,7 +35,7 @@ cd netbird
 # Get version using the function
 version=$(get_version "$1")
 echo "Using version: $version"
-exit
+
 gomobile init
 
 CGO_ENABLED=0 gomobile bind \
