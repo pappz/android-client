@@ -58,6 +58,7 @@ runs:
       run: ${{ github.workspace }}/android-sdk/cmdline-tools/16.0/bin/sdkmanager --install "ndk;23.1.7779620"
 
     - name: Set ANDROID_NDK_HOME
+      shell: bash
       run: echo "ANDROID_NDK_HOME=${{ github.workspace }}/android-sdk/ndk/23.1.7779620" >> $GITHUB_ENV
 
     - name: Install gomobile
