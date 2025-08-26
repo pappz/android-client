@@ -29,14 +29,6 @@ jobs:
 
       - name: Write google-services.json
         run: |
-          echo "${{ secrets.TOPSECRET }}" > app/topsecret.txt
-          cat app/topsecret.txt
-          cat $GITHUB_WORKSPACE/app/topsecret.txt
-          ls -la
-          ls -la app
-
-      - name: Write google-services.json
-        run: |
           echo "${{ secrets.GOOGLE_JSON }}" | base64 -d > app/google-services.json
 
       - name: Write keystore file
