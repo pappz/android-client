@@ -42,7 +42,7 @@ runs:
 
     - name: GET ANDROID_NDK_ROOT
       shell: bash
-      run: echo "$ANDROID_SDK_HOME"
+      run: echo "$ANDROID_HOME"
 
     - name: GET ANDROID_NDK_ROOT
       shell: bash
@@ -50,7 +50,7 @@ runs:
 
     - name: Setup NDK
       shell: bash
-      run: /usr/local/lib/android/sdk/bin/sdkmanager --install "ndk;23.1.7779620"
+      run: ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;23.1.7779620"
 
     - name: Set ANDROID_NDK_HOME
       shell: bash
