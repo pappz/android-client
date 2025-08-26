@@ -7,7 +7,7 @@ inputs:
   version_code:
     description: 'Version code for the build'
     required: false
-    default: '1'
+    default: ''
   build_type:
     description: 'Build type: debug or release'
     required: true
