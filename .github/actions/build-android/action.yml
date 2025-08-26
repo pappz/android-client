@@ -23,6 +23,7 @@ runs:
   using: 'composite'
   steps:
     - name: Fetch tags for submodule
+      shell: bash
       run: |
         cd netbird
         git fetch --tags
