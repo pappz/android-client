@@ -36,12 +36,18 @@ jobs:
           echo "${{ secrets.GPLAY_KEYSTORE }}" | base64 -d > gplay.keystore
           echo "NETBIRD_UPLOAD_STORE_FILE=$GITHUB_WORKSPACE/gplay.keystore" >> $GITHUB_ENV
 
+      - name: Compute version code
+        id: version_code
+        run: |
+          adjusted=$(( ${{ github.run_number }} + 40 ))
+          echo "adjusted=$adjusted" >> $GITHUB_OUTPUT
+
       - name: Build Android
         id: build
         uses: ./.github/actions/build-android
         with:
           version_name: ${{ steps.version.outputs.version_name }}
-          version_code: ${{ github.run_number }}
+          version_code: ${{ steps.version_code.outputs.adjusted }}
           build_type: release
 
       - name: Upload files to existing release
