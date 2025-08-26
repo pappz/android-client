@@ -1,0 +1,46 @@
+name: build release
+
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version_name: ${{ steps.version.outputs.version_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get short Git hash
+        id: version
+        run: |
+          TAG_NAME=${GITHUB_REF_NAME}
+          echo "version_name=$TAG_NAME" >> $GITHUB_OUTPUT
+
+  build-debug:
+    needs: get-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Write google-services.json
+        run: |
+          mkdir -p app
+          echo '${{ secrets.GOOGLE_JSON }}' > app/google-services.json
+
+      - name: Write keystore file
+        run: |
+          echo "${{ secrets.GPLAY_KEYSTORE }}" | base64 -d > gplay.keystore
+          echo "NETBIRD_UPLOAD_STORE_FILE=$GITHUB_WORKSPACE/gplay.keystore" >> $GITHUB_ENV
+
+      - name: Trigger reusable build
+        uses: ./.github/workflows/build.yml
+        with:
+          version_name: ${{ needs.get-version.outputs.version_name }}
+          version_code: ${{ github.run_number }}
+          build_type: release
+        secrets: inherit
+
