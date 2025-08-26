@@ -43,19 +43,11 @@ runs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
-        android-sdk-root: ${{ github.workspace }}/android-sdk
         cmdline-tools-version: 12266719
-
-    - name: NDK Cache
-      id: ndk-cache
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.workspace }}/android-sdk/ndk
-        key: ndk-cache-23.1.7779620
 
     - name: Setup NDK
       shell: bash
-      run: ${{ github.workspace }}/android-sdk/cmdline-tools/16.0/bin/sdkmanager --install "ndk;23.1.7779620"
+      run: sdkmanager --install "ndk;23.1.7779620"
 
     - name: Set ANDROID_NDK_HOME
       shell: bash
