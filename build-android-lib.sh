@@ -1,7 +1,12 @@
 #!/bin/bash
 # Script to build NetBird mobile bindings using gomobile
 # Usage: ./script.sh [version]
-# If no version is provided, "development" is used as default
+# - If a version is provided, it will be used.
+# - If no version is provided:
+#     * Uses the latest Git tag if available.
+#     * Otherwise, defaults to "dev-<short-hash>".
+# - When running in GitHub Actions, uses "ci-<short-hash>" instead of "dev-<short-hash>".
+
 set -e
 
 app_path=$(pwd)
@@ -17,14 +22,18 @@ get_version() {
   local tag=$(git describe --tags --exact-match 2>/dev/null || true)
 
   if [ -n "$tag" ]; then
-    cd - > /dev/null
     echo "$tag"
     return
   fi
 
-  # Fallback to "dev-<short-hash>"
+  # Fallback to "<prefix>-<short-hash>"
   local short_hash=$(git rev-parse --short HEAD)
-  local new_version="dev-$short_hash"
+
+  if [ "$GITHUB_ACTIONS" == "true" ]; then
+    local new_version="ci-$short_hash"
+  else
+    local new_version="dev-$short_hash"
+  fi
 
   echo "$new_version"
 }
