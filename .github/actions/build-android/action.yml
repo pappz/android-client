@@ -40,17 +40,21 @@ runs:
       with:
         go-version: "1.23.3"
 
-    - name: Setup NDK
+    - name: GET ANDROID_NDK_ROOT
       shell: bash
-      run: sdkmanager --install "ndk;23.1.7779620"
+      run: echo "$ANDROID_SDK_HOME"
 
     - name: GET ANDROID_NDK_ROOT
       shell: bash
       run: echo "$ANDROID_NDK_HOME"
 
+    - name: Setup NDK
+      shell: bash
+      run: /usr/local/lib/android/sdk/bin/sdkmanager --install "ndk;23.1.7779620"
+
     - name: Set ANDROID_NDK_HOME
       shell: bash
-      run: echo "ANDROID_NDK_HOME/usr/local/lib/android/sdk/ndk/23.1.7779620" >> $GITHUB_ENV
+      run: echo "ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk/23.1.7779620" >> $GITHUB_ENV
 
     - name: Install gomobile
       shell: bash
