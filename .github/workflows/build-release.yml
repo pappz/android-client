@@ -19,7 +19,7 @@ jobs:
           TAG_NAME=${GITHUB_REF_NAME}
           echo "version_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
-  build-debug:
+  build-release:
     needs: get-version
     runs-on: ubuntu-latest
     steps:
