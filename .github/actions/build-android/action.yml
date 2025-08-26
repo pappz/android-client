@@ -43,18 +43,22 @@ runs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
+        android-sdk-root: ${{ github.workspace }}/android-sdk
         cmdline-tools-version: 12266719
 
     - name: NDK Cache
       id: ndk-cache
       uses: actions/cache@v3
       with:
-        path: /usr/local/lib/android/sdk/ndk
+        path: ${{ github.workspace }}/android-sdk/ndk
         key: ndk-cache-23.1.7779620
 
     - name: Setup NDK
       shell: bash
-      run: /usr/local/lib/android/sdk/cmdline-tools/16.0/bin/sdkmanager --install "ndk;23.1.7779620"
+      run: ${{ github.workspace }}/android-sdk/cmdline-tools/16.0/bin/sdkmanager --install "ndk;23.1.7779620"
+
+    - name: Set ANDROID_NDK_HOME
+      run: echo "ANDROID_NDK_HOME=${{ github.workspace }}/android-sdk/ndk/23.1.7779620" >> $GITHUB_ENV
 
     - name: Install gomobile
       shell: bash
@@ -63,8 +67,6 @@ runs:
     - name: Build NetBird Go library
       shell: bash
       run: PATH=$PATH:$(go env GOPATH)/bin bash -x build-android-lib.sh
-      env:
-        ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk/23.1.7779620
 
     - name: Build APK and Bundle
       shell: bash
