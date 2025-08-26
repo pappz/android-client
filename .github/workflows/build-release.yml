@@ -25,7 +25,7 @@ jobs:
       - name: Write google-services.json
         run: |
           mkdir -p app
-          echo '${{ secrets.GOOGLE_JSON }}' > app/google-services.json
+          echo '${{ secrets.GOOGLE_JSON }}' | base64 -d > app/google-services.json
 
       - name: Write keystore file
         run: |
