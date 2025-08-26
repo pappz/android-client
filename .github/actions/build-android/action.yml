@@ -22,6 +22,11 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: Fetch tags for submodule
+      run: |
+        cd netbird
+        git fetch --tags
+
     - name: Setup Java
       uses: actions/setup-java@v3
       with:
